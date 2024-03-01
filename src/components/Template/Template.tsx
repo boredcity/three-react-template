@@ -1,16 +1,17 @@
 import { useFrame } from '@react-three/fiber';
 import { Grid, Html, TransformControls, useHelper } from '@react-three/drei';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
 import { testButton } from './Template.module.css';
+import { TestModel } from '../models/TestModel';
+import { Placeholder } from '../models/Placeholder';
 
 export const Template = () => {
     const cube = useRef<Mesh>(null);
     const sphere = useRef<Mesh>(null!);
     const directionalLight = useRef<DirectionalLight>(null!);
-    useHelper(directionalLight, DirectionalLightHelper, 2, 0x000000)
-
+    useHelper(directionalLight, DirectionalLightHelper, 2, 0x000000);
     const { cubePosition, cubeColor, lightY } = useControls({
         cubePosition: {
             value: { x: 2, z: 0 },
@@ -23,7 +24,7 @@ export const Template = () => {
             value: 2.5,
             min: 0,
             max: 5,
-            step: 0.01,
+            step: 0.01
         },
         cubeColor: 'rebeccapurple'
     });
@@ -58,7 +59,7 @@ export const Template = () => {
                 shadow-camera-bottom={-3}
                 shadow-camera-left={-3}
                 shadow-camera-right={3}
-                color={0xFFAAAA}
+                color={0xffaaaa}
             />
 
             <mesh ref={sphere} position-x={-2} castShadow receiveShadow>
@@ -86,7 +87,13 @@ export const Template = () => {
                         Test button
                     </button>
                 </Html>
-                <mesh ref={cube} scale={1.5} position-y={-0.25} castShadow receiveShadow>
+                <mesh
+                    ref={cube}
+                    scale={1.5}
+                    position-y={-0.25}
+                    castShadow
+                    receiveShadow
+                >
                     <boxGeometry />
                     <meshStandardMaterial color={cubeColor} />
                 </mesh>
@@ -102,7 +109,17 @@ export const Template = () => {
                 <meshStandardMaterial color="greenyellow" />
             </mesh>
 
+            <group position={[0, -1, 3]}>
+                <Suspense
+                    fallback={
+                        <Placeholder scale={[2, 1, 2]} position={[0, 1, 0]} />
+                    }
+                >
+                    <TestModel scale={0.25} />
+                </Suspense>
+            </group>
+
             <Grid fadeDistance={50} position-y={-0.99} infiniteGrid />
         </>
     );
-}
+};

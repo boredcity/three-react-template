@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    publicDir: './static/',
+    publicDir: './public/',
     base: './',
     server: {
         host: true, // Open to local network and display URL
