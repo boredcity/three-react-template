@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build"
+        "build": "tsc && vite build",
+        "deploy": "vercel --prod"
     },
     "devDependencies": {
         "@types/node": "^20.11.24",
@@ -22,6 +23,7 @@
         "r3f-perf": "^7.1.2",
         "react": "18.2",
         "react-dom": "18.2",
-        "three": "^0.158.0"
+        "three": "^0.158.0",
+        "vercel": "^33.5.3"
     }
 }
