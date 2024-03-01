@@ -27,7 +27,7 @@ root.render(
             position: [-4, 3, 6]
         }}
     >
-        {bakeShadows}
+        {/* {bakeShadows} */}
         {softShadows}
         <Perf position="top-left" />
         <OrbitControls makeDefault />
