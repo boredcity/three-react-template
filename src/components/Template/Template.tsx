@@ -6,6 +6,7 @@ import { useControls } from 'leva';
 import { testButton } from './Template.module.css';
 import { TestModel } from '../models/TestModel';
 import { Placeholder } from '../models/Placeholder';
+import { TestJSXModel } from '../models/TestJSXModel';
 
 export const Template = () => {
     const cube = useRef<Mesh>(null);
@@ -55,10 +56,11 @@ export const Template = () => {
                 shadow-mapSize={[1024, 1024]}
                 shadow-camera-near={0.1}
                 shadow-camera-far={12}
-                shadow-camera-top={3}
-                shadow-camera-bottom={-3}
-                shadow-camera-left={-3}
-                shadow-camera-right={3}
+                // shadow-camera-top={5}
+                // shadow-camera-bottom={-5}
+                // shadow-camera-left={-5}
+                // shadow-camera-right={5}
+                shadow-normalBias={0.04} // choose the smallest ok value if shadow acne appears
                 color={0xffaaaa}
             />
 
@@ -116,6 +118,7 @@ export const Template = () => {
                     }
                 >
                     <TestModel scale={0.25} />
+                    <TestJSXModel scale={0.25} position-z={-6} />
                 </Suspense>
             </group>
 
