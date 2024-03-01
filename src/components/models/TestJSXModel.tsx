@@ -20,9 +20,12 @@ type GLTFResult = GLTF & {
     };
 };
 
-export function TestJSXModel(props: JSX.IntrinsicElements['group']) {
+export function TestJSXModel({
+    topBunScale = 1,
+    ...props
+}: JSX.IntrinsicElements['group'] & { topBunScale?: number }) {
     const { nodes, materials } = useGLTF(
-        '/testModel/TestModel.glb'
+        '/Hamburger/Hamburger.glb'
     ) as GLTFResult;
     return (
         <group {...props} dispose={null}>
@@ -51,15 +54,15 @@ export function TestJSXModel(props: JSX.IntrinsicElements['group']) {
             />
             <mesh
                 name="topBun"
-                rotation-x={Math.PI}
                 castShadow
                 receiveShadow
                 geometry={nodes.topBun.geometry}
                 material={materials.BunMaterial}
-                position={[0, 6, 0]}
+                position={[0, 1.8, 0]}
+                scale={topBunScale}
             />
         </group>
     );
 }
 
-useGLTF.preload('/testModel/TestModel.glb');
+useGLTF.preload('/Hamburger/Hamburger.glb');

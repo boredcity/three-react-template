@@ -117,10 +117,12 @@ export const Template = () => {
                         <Placeholder scale={[2, 1, 2]} position={[0, 1, 0]} />
                     }
                 >
-                    <TestModel scale={0.25} />
-                    <TestJSXModel scale={0.25} position-z={-6} />
+                    <TestJSXModel scale={0.25} topBunScale={1.2} />
                 </Suspense>
             </group>
+            <Suspense>
+                <TestModel scale={0.025} position={[0, -1, -3]} />
+            </Suspense>
 
             <Grid fadeDistance={50} position-y={-0.99} infiniteGrid />
         </>
