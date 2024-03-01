@@ -1,0 +1,10 @@
+.testButton {
+    font-size: 20px;
+    border-radius: 4px;
+    margin: 4px;
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    user-select: none;
+    border: 1px solid black;
+    cursor: pointer;
+}
