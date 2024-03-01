@@ -21,9 +21,9 @@ type GLTFResult = GLTF & {
 };
 
 export function TestJSXModel({
-    topBunScale = 1,
+    cheeseScale = 1,
     ...props
-}: JSX.IntrinsicElements['group'] & { topBunScale?: number }) {
+}: JSX.IntrinsicElements['group'] & { cheeseScale?: number }) {
     const { nodes, materials } = useGLTF(
         '/Hamburger/Hamburger.glb'
     ) as GLTFResult;
@@ -46,6 +46,7 @@ export function TestJSXModel({
             />
             <mesh
                 name="cheese"
+                scale={cheeseScale}
                 castShadow
                 receiveShadow
                 geometry={nodes.cheese.geometry}
@@ -59,7 +60,6 @@ export function TestJSXModel({
                 geometry={nodes.topBun.geometry}
                 material={materials.BunMaterial}
                 position={[0, 1.8, 0]}
-                scale={topBunScale}
             />
         </group>
     );

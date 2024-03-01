@@ -32,7 +32,7 @@ root.render(
         <Perf position="top-left" />
         <OrbitControls makeDefault />
         <ambientLight intensity={1.5} />
-        <color args={[0xffffff]} attach="background" />
+        <color args={['#000']} attach="background" />
         <Template />
     </Canvas>
 );

@@ -1,5 +1,11 @@
 import { useFrame } from '@react-three/fiber';
-import { Grid, Html, TransformControls, useHelper } from '@react-three/drei';
+import {
+    Float,
+    Grid,
+    Html,
+    TransformControls,
+    useHelper
+} from '@react-three/drei';
 import { Suspense, useRef } from 'react';
 import { DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
@@ -117,7 +123,9 @@ export const Template = () => {
                         <Placeholder scale={[2, 1, 2]} position={[0, 1, 0]} />
                     }
                 >
-                    <TestJSXModel scale={0.25} topBunScale={1.2} />
+                    <Float>
+                        <TestJSXModel scale={0.25} cheeseScale={1.5} />
+                    </Float>
                 </Suspense>
             </group>
             <Suspense>
