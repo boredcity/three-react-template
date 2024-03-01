@@ -14,7 +14,8 @@
         "@types/react-dom": "^18.2.19",
         "@vitejs/plugin-react": "^4.2.1",
         "typescript": "^5.3.3",
-        "vite": "^5.1.4"
+        "vite": "^5.1.4",
+        "vercel": "^33.5.3"
     },
     "dependencies": {
         "@react-three/drei": "^9.99.5",
@@ -23,7 +24,6 @@
         "r3f-perf": "^7.1.2",
         "react": "18.2",
         "react-dom": "18.2",
-        "three": "^0.158.0",
-        "vercel": "^33.5.3"
+        "three": "^0.158.0"
     }
 }
