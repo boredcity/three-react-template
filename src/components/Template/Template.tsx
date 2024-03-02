@@ -19,7 +19,7 @@ export const Template = () => {
     const sphere = useRef<Mesh>(null!);
     const directionalLight = useRef<DirectionalLight>(null!);
     useHelper(directionalLight, DirectionalLightHelper, 2, 0x000000);
-    const { cubePosition, cubeColor, lightY } = useControls({
+    const { cubePosition, cubeColor, lightY, cheeseScale } = useControls({
         cubePosition: {
             value: { x: 2, z: 0 },
             min: -10,
@@ -33,7 +33,13 @@ export const Template = () => {
             max: 5,
             step: 0.01
         },
-        cubeColor: 'rebeccapurple'
+        cubeColor: 'rebeccapurple',
+        cheeseScale: {
+            value: 1.5,
+            min: 0.95,
+            max: 1.5,
+            step: 0.01
+        }
     });
 
     useFrame((state, delta) => {
@@ -124,7 +130,7 @@ export const Template = () => {
                     }
                 >
                     <Float>
-                        <TestJSXModel scale={0.25} cheeseScale={1.5} />
+                        <TestJSXModel scale={0.25} cheeseScale={cheeseScale} />
                     </Float>
                 </Suspense>
             </group>
