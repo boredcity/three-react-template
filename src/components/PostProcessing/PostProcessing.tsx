@@ -7,21 +7,24 @@ import {
 import { Drunk } from './effects/drunk/Drunk';
 import { useRef } from 'react';
 import { useControls } from 'leva';
-import { BlendFunction } from 'postprocessing';
 
 export const PostProcessing = () => {
     const drunkRef = useRef();
 
-    const drunkProps = useControls('drunk FX', {
-        frequency: {
-            value: 32,
-            min: 0,
-            max: 100,
-            step: 0.1
+    const drunkProps = useControls(
+        'Drunk FX',
+        {
+            enabled: false,
+            frequency: {
+                value: 32,
+                min: 0,
+                max: 100,
+                step: 0.1
+            },
+            amplitude: { value: 0.01, min: 0, max: 0.4, step: 0.001 }
         },
-        amplitude: { value: 0.01, min: 0, max: 0.4, step: 0.001 },
-        enabled: false
-    });
+        { collapsed: true }
+    );
 
     return (
         <EffectComposer

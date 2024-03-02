@@ -19,28 +19,34 @@ export const Template = () => {
     const sphere = useRef<Mesh>(null!);
     const directionalLight = useRef<DirectionalLight>(null!);
     useHelper(directionalLight, DirectionalLightHelper, 2, 0x000000);
-    const { cubePosition, cubeColor, lightY, cheeseScale } = useControls({
-        cubePosition: {
-            value: { x: 2, z: 0 },
-            min: -10,
-            max: 10,
-            step: 0.01
-            // joystick: 'invertY'
+    const { cubePosition, cubeColor, lightY, cheeseScale } = useControls(
+        'Template',
+        {
+            cubePosition: {
+                value: { x: 2, z: 0 },
+                min: -10,
+                max: 10,
+                step: 0.01
+                // joystick: 'invertY'
+            },
+            lightY: {
+                value: 2.5,
+                min: 0,
+                max: 5,
+                step: 0.01
+            },
+            cubeColor: 'rebeccapurple',
+            cheeseScale: {
+                value: 1.5,
+                min: 0.95,
+                max: 1.5,
+                step: 0.01
+            }
         },
-        lightY: {
-            value: 2.5,
-            min: 0,
-            max: 5,
-            step: 0.01
-        },
-        cubeColor: 'rebeccapurple',
-        cheeseScale: {
-            value: 1.5,
-            min: 0.95,
-            max: 1.5,
-            step: 0.01
+        {
+            collapsed: true
         }
-    });
+    );
 
     useFrame((state, delta) => {
         const { elapsedTime } = state.clock;

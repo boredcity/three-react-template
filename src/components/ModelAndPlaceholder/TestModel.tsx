@@ -8,11 +8,15 @@ export const TestModel = ({ position, scale }: MeshProps) => {
     const { scene, animations } = useGLTF('./Fox/Fox.gltf');
     const { actions, names: animationNames } = useAnimations(animations, scene);
 
-    const { animationName } = useControls('fox', {
-        animationName: {
-            options: animationNames
-        }
-    });
+    const { animationName } = useControls(
+        'Fox',
+        {
+            animationName: {
+                options: animationNames
+            }
+        },
+        { collapsed: true }
+    );
 
     useEffect(() => {
         const animation = actions[animationName];
