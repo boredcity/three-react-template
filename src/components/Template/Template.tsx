@@ -7,7 +7,7 @@ import {
     useHelper
 } from '@react-three/drei';
 import { Suspense, useRef } from 'react';
-import { DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
+import { Color, DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
 import { testButton } from './Template.module.css';
 import { TestModel } from '../models/TestModel';
@@ -78,7 +78,12 @@ export const Template = () => {
 
             <mesh ref={sphere} position-x={-2} castShadow receiveShadow>
                 <sphereGeometry />
-                <meshStandardMaterial color="orange" />
+                <meshBasicMaterial
+                    color={new Color(10, 0, 0)} // value over 10 for bloom
+                    // or normalized color + meshStandardMaterial
+                    // emissive="blue"
+                    // emissiveIntensity={10}
+                />
             </mesh>
             <TransformControls object={sphere} />
 
