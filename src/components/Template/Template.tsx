@@ -10,9 +10,9 @@ import { Suspense, useRef } from 'react';
 import { Color, DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
 import { testButton } from './Template.module.css';
-import { TestModel } from '../models/TestModel';
-import { Placeholder } from '../models/Placeholder';
-import { TestJSXModel } from '../models/TestJSXModel';
+import { TestModel } from '../ModelAndPlaceholder/TestModel';
+import { Placeholder } from '../ModelAndPlaceholder/Placeholder';
+import { TestJSXModel } from '../ModelAndPlaceholder/TestJSXModel';
 
 export const Template = () => {
     const cube = useRef<Mesh>(null);
