@@ -26,24 +26,32 @@ export const PostProcessing = () => {
         { collapsed: true }
     );
 
-    return (
-        <EffectComposer
-            disableNormalPass
-            multisampling={8} // prevents aliasing (samples); 8 is default
-        >
-            <Drunk ref={drunkRef} {...drunkProps} />
+        const fovProps = useControls(
+            'FoV FX',
+            {
+                enabled: false
+            },
+            { collapsed: true }
+        );
 
-            <Bloom
-                luminanceThreshold={1.001} // color values above glow
-                mipmapBlur // adds blur effect outside object too
-                intensity={2} // general intensity
-            />
-            <DepthOfField
-                focusDistance={0.05} // distance from camera to unblured element (camera.far - camera.near) * value
-                focalLength={0.025} // min distance from unblured to max blur
-                bokehScale={4} // blur radius
-            />
-            <ToneMapping />
-        </EffectComposer>
-    );
+        return (
+            <EffectComposer
+                disableNormalPass
+                multisampling={8} // prevents aliasing (samples); 8 is default
+            >
+                <Drunk ref={drunkRef} {...drunkProps} />
+
+                <Bloom
+                    luminanceThreshold={1.001} // color values above glow
+                    mipmapBlur // adds blur effect outside object too
+                    intensity={2} // general intensity
+                />
+                <DepthOfField
+                    focusDistance={0.05} // distance from camera to unblured element (camera.far - camera.near) * value
+                    focalLength={0.025} // min distance from unblured to max blur
+                    bokehScale={fovProps.enabled ? 4 : 0} // blur radius
+                />
+                <ToneMapping />
+            </EffectComposer>
+        );
 };
