@@ -1,10 +1,11 @@
 import { Bvh, useAnimations, useCursor, useGLTF } from '@react-three/drei';
 import { MeshProps } from '@react-three/fiber';
-import { useControls } from 'leva';
+import { buttonGroup, useControls } from 'leva';
+import { ButtonGroupOpts } from 'leva/dist/declarations/src/types';
 import { useEffect, useState } from 'react';
 import { Mesh } from 'three';
 
-export const TestModel = ({ position, scale }: MeshProps) => {
+export const FoxModel = ({ position, scale }: MeshProps) => {
     const { scene, animations } = useGLTF('./Fox/Fox.gltf');
     const { actions, names: animationNames } = useAnimations(animations, scene);
     const [hovered, setHovered] = useState(false);
@@ -12,18 +13,25 @@ export const TestModel = ({ position, scale }: MeshProps) => {
 
     const [playAnimation, setPlayAnimation] = useState(true);
 
-    const { animationName } = useControls(
+    const [{ animationName }, setControls] = useControls(
         'Fox',
-        {
+        () => ({
             animationName: {
-                options: animationNames
-            }
-        },
+                value: animationNames[0],
+                editable: false
+            },
+            ' ': buttonGroup({
+                opts: animationNames.reduce((acc, v) => {
+                    acc[v] = () => setControls({ animationName: v });
+                    return acc;
+                }, {} as ButtonGroupOpts)
+            })
+        }),
         { collapsed: true }
     );
 
     useEffect(() => {
-        if (playAnimation) {
+        if (playAnimation && animationName) {
             const animation = actions[animationName];
             animation
                 ?.reset() // start animation from the beginning

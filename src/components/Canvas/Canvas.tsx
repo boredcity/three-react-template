@@ -10,18 +10,25 @@ import { PostProcessing } from '../PostProcessing/PostProcessing';
 import { Leva, useControls } from 'leva';
 
 export const Canvas: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const { bakeShadows, showPerf, showSoftShadows } = useControls(
+    const { bakeShadows, showPerf, softShadows } = useControls(
         'Canvas',
         {
-            showPerf: false,
-            showSoftShadows: true,
-            bakeShadows: false
+            softShadows: true,
+            bakeShadows: false,
+            showPerf: false
         },
         { collapsed: true }
     );
     return (
         <>
-            <Leva collapsed />
+            <Leva
+                collapsed
+                theme={{
+                    sizes: {
+                        rootWidth: '300px'
+                    }
+                }}
+            />
             <LibCanvas
                 shadows
                 camera={{
@@ -32,7 +39,7 @@ export const Canvas: React.FC<React.PropsWithChildren> = ({ children }) => {
                 }}
             >
                 {bakeShadows && <BakeShadows />}
-                {showSoftShadows && (
+                {softShadows && (
                     <SoftShadows
                         size={6 /* how soft is the light */}
                         samples={5 /* quality */}

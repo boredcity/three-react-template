@@ -20,7 +20,7 @@ type GLTFResult = GLTF & {
     };
 };
 
-export function TestJSXModel({
+export function BurgerModel({
     cheeseScale = 1,
     ...props
 }: JSX.IntrinsicElements['group'] & { cheeseScale?: number }) {

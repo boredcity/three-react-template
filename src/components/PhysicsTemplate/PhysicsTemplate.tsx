@@ -7,12 +7,10 @@ import {
     RigidBody
 } from '@react-three/rapier';
 import { useMemo, useRef } from 'react';
-import { Euler, Quaternion } from 'three';
-import { TestJSXModel } from '../ModelAndPlaceholder/TestJSXModel';
+import { Euler, Quaternion, Vector3Like } from 'three';
+import { BurgerModel } from '../ModelAndPlaceholder/BurgerModel';
 import { useControls } from 'leva';
 
-const hitSound = new Audio('/audio/hit.mp3');
-const sceneX = -11;
 export const PhysicsTemplate = () => {
     const complexCuboid = useRef<any>(null!);
     const twister = useRef<any>(null!);
@@ -26,22 +24,17 @@ export const PhysicsTemplate = () => {
     };
 
     useFrame(({ clock: { elapsedTime } }) => {
-        const eulerRotation = new Euler(0, elapsedTime, 0);
+        const eulerRotation = new Euler(0, elapsedTime * 4, 0);
         const quaternionRotation = new Quaternion();
         quaternionRotation.setFromEuler(eulerRotation);
         twister.current.setNextKinematicRotation(quaternionRotation);
         const angle = elapsedTime * 0.5;
         twister.current.setNextKinematicTranslation({
-            x: Math.sin(angle) * 2 + sceneX,
+            x: Math.sin(angle) * 2,
             z: Math.cos(angle) * 2,
             y: -0.8
         });
     });
-
-    const onCollisionEnter = () => {
-        hitSound.currentTime = 0;
-        hitSound.play();
-    };
 
     const cubesCount = 200;
     const instances = useMemo(() => {
@@ -61,102 +54,120 @@ export const PhysicsTemplate = () => {
         return instances;
     }, []);
 
-    const { debug } = useControls('Physics', {
-        debug: false
-    });
+    const { debug, dropCubes } = useControls(
+        'Physics',
+        {
+            dropCubes: false,
+            debug: false
+        },
+        { collapsed: true }
+    );
 
     return (
-        <Physics debug={debug} gravity={[0, -9.08, 0]}>
-            <group position-x={sceneX}>
-                <RigidBody
-                    colliders="ball"
-                    gravityScale={1}
-                    restitution={1}
-                    friction={0.7}
-                >
-                    <mesh castShadow position={[-2, 2, 0]}>
-                        <sphereGeometry />
-                        <meshStandardMaterial color="orange" />
-                    </mesh>
-                </RigidBody>
-
-                <RigidBody
-                    ref={complexCuboid}
-                    friction={0.7}
-                    onCollisionEnter={onCollisionEnter}
-                >
-                    <mesh castShadow position={[2, 4, 0]} onClick={jump}>
-                        <boxGeometry args={[2, 2, 1]} />
-                        <meshStandardMaterial color="mediumpurple" />
-                    </mesh>
-                    <mesh castShadow position={[2, 4, 1]}>
-                        <boxGeometry args={[2, 1, 1]} />
-                        <meshStandardMaterial color="mediumpurple" />
-                    </mesh>
-                </RigidBody>
-                <RigidBody colliders="hull">
-                    <TestJSXModel scale={0.2} />
-                </RigidBody>
-                {/* <RigidBody
-                    colliders={false}
-                    position={[-2, 1, 0]}
-                    rotation-x={Math.PI / 2}
-                >
-                    <CuboidCollider args={[1.5, 1.5, 0.5]} />
-                    <mesh castShadow>
-                        <torusGeometry args={[1, 0.5]} />
-                        <meshStandardMaterial color="tomato" />
-                    </mesh>
-                </RigidBody> */}
-
-                <RigidBody colliders="hull">
-                    {/* "trimesh" option is better but is empty inside which might lead to bugs with items stuck inside of them */}
-                    <mesh
-                        castShadow
-                        position={[0, 1, 4]}
-                        rotation-x={Math.PI / 2}
+        <>
+            <directionalLight
+                position={[1, 2, 3]}
+                intensity={6.5}
+                castShadow
+                shadow-mapSize={[1024, 1024]}
+                shadow-camera-near={0.1}
+                shadow-camera-far={12}
+                shadow-camera-top={5}
+                shadow-camera-bottom={-5}
+                shadow-camera-left={-5}
+                shadow-camera-right={5}
+                shadow-normalBias={0.04} // choose the smallest ok value if shadow acne appears
+                color={0xffaaaa}
+            />
+            <Physics debug={debug} gravity={[0, -9.08, 0]}>
+                <group>
+                    <RigidBody
+                        colliders="ball"
+                        gravityScale={1}
+                        restitution={1}
+                        friction={0.7}
                     >
-                        <torusGeometry args={[1, 0.5]} />
-                        <meshStandardMaterial color="tomato" />
-                    </mesh>
-                </RigidBody>
+                        <mesh castShadow position={[-2, 2, 0]}>
+                            <sphereGeometry />
+                            <meshStandardMaterial color="orange" />
+                        </mesh>
+                    </RigidBody>
 
-                <RigidBody type="fixed" restitution={1}>
-                    <mesh receiveShadow position-y={-1.25}>
-                        <boxGeometry args={[10, 0.5, 10]} />
-                        <meshStandardMaterial color="greenyellow" />
-                    </mesh>
-                </RigidBody>
+                    <RigidBody ref={complexCuboid} friction={0.7}>
+                        <mesh castShadow position={[2, 4, 0]} onClick={jump}>
+                            <boxGeometry args={[2, 2, 1]} />
+                            <meshStandardMaterial color="mediumpurple" />
+                        </mesh>
+                        <mesh castShadow position={[2, 4, 1]}>
+                            <boxGeometry args={[2, 1, 1]} />
+                            <meshStandardMaterial color="mediumpurple" />
+                        </mesh>
+                    </RigidBody>
+                    <RigidBody colliders="hull">
+                        <BurgerModel scale={0.2} />
+                    </RigidBody>
 
-                <RigidBody type="kinematicPosition" ref={twister}>
-                    <mesh castShadow scale={[0.4, 0.4, 4]}>
-                        <boxGeometry />
-                        <meshStandardMaterial color="tomato" />
-                    </mesh>
-                </RigidBody>
+                    <RigidBody colliders="hull">
+                        {/* "trimesh" option is better but is empty inside which might lead to bugs with items stuck inside of them */}
+                        <mesh
+                            castShadow
+                            position={[0, 1, 4]}
+                            rotation-x={Math.PI / 2}
+                        >
+                            <torusGeometry args={[1, 0.5]} />
+                            <meshStandardMaterial color="tomato" />
+                        </mesh>
+                    </RigidBody>
 
-                <RigidBody type="fixed">
-                    <CuboidCollider args={[5, 2, 0.5]} position={[0, 1, 5.5]} />
-                    <CuboidCollider
-                        args={[5, 2, 0.5]}
-                        position={[0, 1, -5.5]}
-                    />
-                    <CuboidCollider args={[0.5, 2, 5]} position={[5.5, 1, 0]} />
-                    <CuboidCollider
-                        args={[0.5, 2, 5]}
-                        position={[-5.5, 1, 0]}
-                    />
-                </RigidBody>
-                <InstancedRigidBodies instances={instances}>
-                    <instancedMesh
-                        castShadow
-                        args={[undefined, undefined, cubesCount]}
-                    >
-                        <boxGeometry />
-                        <meshBasicMaterial color="lime" />
-                    </instancedMesh>
-                </InstancedRigidBodies>
-            </group>
-        </Physics>
+                    <RigidBody type="fixed" restitution={1}>
+                        <mesh receiveShadow position-y={-1.25}>
+                            <boxGeometry args={[10, 0.5, 10]} />
+                            <meshStandardMaterial color="greenyellow" />
+                        </mesh>
+                    </RigidBody>
+
+                    <RigidBody type="kinematicPosition" ref={twister}>
+                        <mesh castShadow scale={[0.4, 0.4, 4]}>
+                            <boxGeometry />
+                            <meshStandardMaterial color="tomato" />
+                        </mesh>
+                    </RigidBody>
+
+                    <RigidBody type="fixed">
+                        <CuboidCollider
+                            args={[5, 2, 0.5]}
+                            position={[0, 1, 5.5]}
+                        />
+                        <CuboidCollider
+                            args={[5, 2, 0.5]}
+                            position={[0, 1, -5.5]}
+                        />
+                        <CuboidCollider
+                            args={[0.5, 2, 5]}
+                            position={[5.5, 1, 0]}
+                        />
+                        <CuboidCollider
+                            args={[0.5, 2, 5]}
+                            position={[-5.5, 1, 0]}
+                        />
+                    </RigidBody>
+                    {dropCubes && (
+                        <InstancedRigidBodies instances={instances}>
+                            <instancedMesh
+                                castShadow
+                                args={[
+                                    undefined, // provided within
+                                    undefined, // provided within
+                                    cubesCount
+                                ]}
+                            >
+                                <boxGeometry />
+                                <meshBasicMaterial color="lime" />
+                            </instancedMesh>
+                        </InstancedRigidBodies>
+                    )}
+                </group>
+            </Physics>
+        </>
     );
 };

@@ -10,13 +10,13 @@ import {
 import { Suspense, useMemo, useRef, useState } from 'react';
 import { Color, DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
-import { testButton } from './Template.module.css';
-import { TestModel } from '../ModelAndPlaceholder/TestModel';
+import { testButton } from './BasicTemplate.module.css';
+import { FoxModel } from '../ModelAndPlaceholder/FoxModel';
 import { Placeholder } from '../ModelAndPlaceholder/Placeholder';
-import { TestJSXModel } from '../ModelAndPlaceholder/TestJSXModel';
+import { BurgerModel } from '../ModelAndPlaceholder/BurgerModel';
 import { IntersectionEvent } from '@react-three/fiber/dist/declarations/src/core/events';
 
-export const Template = () => {
+export const BasicTemplate = () => {
     const cube = useRef<Mesh>(null);
     const sphere = useRef<Mesh>(null!);
     const directionalLight = useRef<DirectionalLight>(null!);
@@ -171,12 +171,12 @@ export const Template = () => {
                     }
                 >
                     <Float>
-                        <TestJSXModel scale={0.25} cheeseScale={cheeseScale} />
+                        <BurgerModel scale={0.25} cheeseScale={cheeseScale} />
                     </Float>
                 </Suspense>
             </group>
             <Suspense>
-                <TestModel scale={0.025} position={[0, -1, -3]} />
+                <FoxModel scale={0.025} position={[0, -1, -3]} />
             </Suspense>
 
             <Grid fadeDistance={50} position-y={-0.99} infiniteGrid />
