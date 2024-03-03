@@ -1,52 +1,56 @@
-import { useFrame } from '@react-three/fiber';
+import { Properties, useFrame } from '@react-three/fiber';
 import {
     Float,
     Grid,
     Html,
     TransformControls,
+    meshBounds,
     useHelper
 } from '@react-three/drei';
-import { Suspense, useRef } from 'react';
+import { Suspense, useMemo, useRef, useState } from 'react';
 import { Color, DirectionalLight, DirectionalLightHelper, Mesh } from 'three';
 import { useControls } from 'leva';
 import { testButton } from './Template.module.css';
 import { TestModel } from '../ModelAndPlaceholder/TestModel';
 import { Placeholder } from '../ModelAndPlaceholder/Placeholder';
 import { TestJSXModel } from '../ModelAndPlaceholder/TestJSXModel';
+import { IntersectionEvent } from '@react-three/fiber/dist/declarations/src/core/events';
 
 export const Template = () => {
     const cube = useRef<Mesh>(null);
     const sphere = useRef<Mesh>(null!);
     const directionalLight = useRef<DirectionalLight>(null!);
     useHelper(directionalLight, DirectionalLightHelper, 2, 0x000000);
-    const { cubePosition, cubeColor, lightY, cheeseScale } = useControls(
-        'Template',
-        {
-            cubePosition: {
-                value: { x: 2, z: 0 },
-                min: -10,
-                max: 10,
-                step: 0.01
-                // joystick: 'invertY'
-            },
-            lightY: {
-                value: 2.5,
-                min: 0,
-                max: 5,
-                step: 0.01
-            },
-            cubeColor: 'rebeccapurple',
-            cheeseScale: {
-                value: 1.5,
-                min: 0.95,
-                max: 1.5,
-                step: 0.01
+
+    const [{ cubePosition, cubeColor, lightY, cheeseScale }, setControls] =
+        useControls(
+            'Template',
+            () => ({
+                cubePosition: {
+                    value: { x: 2, z: 0 },
+                    min: -10,
+                    max: 10,
+                    step: 0.01
+                    // joystick: 'invertY'
+                },
+                lightY: {
+                    value: 2.5,
+                    min: 0,
+                    max: 5,
+                    step: 0.01
+                },
+                cubeColor: 'rebeccapurple',
+                cheeseScale: {
+                    value: 1.5,
+                    min: 0.95,
+                    max: 1.5,
+                    step: 0.01
+                }
+            }),
+            {
+                collapsed: true
             }
-        },
-        {
-            collapsed: true
-        }
-    );
+        );
 
     useFrame((state, delta) => {
         const { elapsedTime } = state.clock;
@@ -63,6 +67,14 @@ export const Template = () => {
             directionalLight.current.position.y = lightY;
         }
     });
+
+    const blockerProps = useMemo(() => {
+        return {
+            onClick: (
+                e: IntersectionEvent<MouseEvent> & Properties<MouseEvent>
+            ) => e.stopPropagation()
+        };
+    }, []);
 
     return (
         <>
@@ -82,7 +94,13 @@ export const Template = () => {
                 color={0xffaaaa}
             />
 
-            <mesh ref={sphere} position-x={-2} castShadow receiveShadow>
+            <mesh
+                ref={sphere}
+                position-x={-2}
+                castShadow
+                receiveShadow
+                {...blockerProps}
+            >
                 <sphereGeometry />
                 <meshBasicMaterial
                     color={new Color(10, 0, 0)} // value over 10 for bloom
@@ -115,9 +133,20 @@ export const Template = () => {
                 <mesh
                     ref={cube}
                     scale={1.5}
+                    raycast={meshBounds}
                     position-y={-0.25}
                     castShadow
                     receiveShadow
+                    onPointerOver={e =>
+                        setControls({
+                            cubeColor: `#${new Color(
+                                Math.random(),
+                                Math.random(),
+                                Math.random()
+                            ).getHexString()}`
+                        })
+                    }
+                    {...blockerProps}
                 >
                     <boxGeometry />
                     <meshStandardMaterial color={cubeColor} />
@@ -129,12 +158,13 @@ export const Template = () => {
                 rotation-x={-Math.PI * 0.5}
                 scale={10}
                 receiveShadow
+                {...blockerProps}
             >
                 <planeGeometry />
                 <meshStandardMaterial color="greenyellow" />
             </mesh>
 
-            <group position={[0, -1, 3]}>
+            <group position={[0, -1, 3]} {...blockerProps}>
                 <Suspense
                     fallback={
                         <Placeholder scale={[2, 1, 2]} position={[0, 1, 0]} />

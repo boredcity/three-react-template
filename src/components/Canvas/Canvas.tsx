@@ -1,4 +1,4 @@
-import { Canvas as ReactCanvas } from '@react-three/fiber';
+import { Canvas as LibCanvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 import {
     BakeShadows,
@@ -22,7 +22,7 @@ export const Canvas: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
         <>
             <Leva collapsed />
-            <ReactCanvas
+            <LibCanvas
                 shadows
                 camera={{
                     fov: 45,
@@ -45,7 +45,7 @@ export const Canvas: React.FC<React.PropsWithChildren> = ({ children }) => {
                 <color args={['#000']} attach="background" />
                 {children}
                 <PostProcessing />
-            </ReactCanvas>
+            </LibCanvas>
             <Loader />
         </>
     );
