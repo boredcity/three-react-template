@@ -7,9 +7,19 @@ import {
     RigidBody
 } from '@react-three/rapier';
 import { useMemo, useRef } from 'react';
-import { Euler, Quaternion, Vector3Like } from 'three';
+import {
+    AdditiveBlending,
+    Color,
+    Euler,
+    Quaternion,
+    ShaderMaterial
+} from 'three';
 import { BurgerModel } from '../ModelAndPlaceholder/BurgerModel';
 import { useControls } from 'leva';
+import {
+    holographicFragmentShader,
+    holographicVertexShader
+} from '../../holographic';
 
 export const PhysicsTemplate = () => {
     const complexCuboid = useRef<any>(null!);
@@ -63,6 +73,22 @@ export const PhysicsTemplate = () => {
         { collapsed: true }
     );
 
+    const shaderMaterialRef = useRef<ShaderMaterial>(null!);
+
+    const uniforms = useMemo(
+        () => ({
+            uColor: { value: new Color('tomato') }
+        }),
+        []
+    );
+
+    useFrame(({ clock }) => {
+        if (shaderMaterialRef.current?.uniforms) {
+            shaderMaterialRef.current.uniforms.uTime ??= { value: 0 };
+            shaderMaterialRef.current.uniforms.uTime.value = clock.elapsedTime;
+        }
+    });
+
     return (
         <>
             <directionalLight
@@ -99,8 +125,16 @@ export const PhysicsTemplate = () => {
                             <meshStandardMaterial color="mediumpurple" />
                         </mesh>
                         <mesh castShadow position={[2, 4, 1]}>
-                            <boxGeometry args={[2, 1, 1]} />
-                            <meshStandardMaterial color="mediumpurple" />
+                            <boxGeometry args={[2, 1, 1, 4, 4]} />
+                            <shaderMaterial
+                                ref={shaderMaterialRef}
+                                vertexShader={holographicVertexShader}
+                                fragmentShader={holographicFragmentShader}
+                                uniforms={uniforms}
+                                transparent
+                                blending={AdditiveBlending}
+                                depthWrite={false}
+                            />
                         </mesh>
                     </RigidBody>
                     <RigidBody colliders="hull">
@@ -133,6 +167,7 @@ export const PhysicsTemplate = () => {
                         </mesh>
                     </RigidBody>
 
+                    {/* Walls */}
                     <RigidBody type="fixed">
                         <CuboidCollider
                             args={[5, 2, 0.5]}
@@ -151,6 +186,8 @@ export const PhysicsTemplate = () => {
                             position={[-5.5, 1, 0]}
                         />
                     </RigidBody>
+
+                    {/* Cubes */}
                     {dropCubes && (
                         <InstancedRigidBodies instances={instances}>
                             <instancedMesh
