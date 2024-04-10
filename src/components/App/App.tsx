@@ -36,6 +36,12 @@ export const App = () => {
             </Canvas>
             {scene === 'XR' && (
                 <XRButton
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        margin: '2rem'
+                    }}
                     mode="AR"
                     sessionInit={{
                         optionalFeatures: [

@@ -31,6 +31,7 @@ export const Canvas: React.FC<React.PropsWithChildren> = ({ children }) => {
             />
             <LibCanvas
                 shadows
+                // frameloop="demand" // enable if nothing moves in the scene
                 camera={{
                     fov: 45,
                     near: 0.1,
